@@ -3,7 +3,8 @@ const { Thought, User } = require('../models');
 
 
 module.exports= {
-  // Get all Thoughts
+  // Retrieves all thoughts
+
 getThoughts(req, res) {
     Thought.find()
     .then((thoughts) => res.json(thoughts))          
@@ -19,6 +20,7 @@ getThoughtById(req, res) {
         path: 'reactions',
         select: '-__v'
     })
+    
     .select('-__v')
     .then((thought) =>
     !thought
@@ -97,6 +99,7 @@ console.log(err);
 });
 },
 
+// these functions add reactions and delete reactions
 
 addReaction(req, res) {
 Thought.findOneAndUpdate(
@@ -109,6 +112,7 @@ Thought.findOneAndUpdate(
     path: 'reactions',
     select: '-__v'
 })
+
 .then((thought) =>
 !thought
 ? res.status(404).json({ message: 'No thought with that ID' })
@@ -126,7 +130,7 @@ deleteReaction( req, res) {
     { runValidators: true, new: true }
 
     )
-    
+
     .then((thought) =>
     !thought
     ? res.status(404).json({ message: 'No thought with that ID' })
