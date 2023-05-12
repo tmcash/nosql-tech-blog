@@ -1,4 +1,3 @@
-// mongoose connection created
 const mongoose = require('mongoose');
 const { connect, connection } = mongoose;
 

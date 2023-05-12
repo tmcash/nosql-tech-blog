@@ -1,44 +1,40 @@
 const { Thought, User } = require('../models');
 
-
-
 module.exports= {
-  // Retrieves all thoughts
-
 getThoughts(req, res) {
-    Thought.find()
-    .then((thoughts) => res.json(thoughts))          
-    .catch((err) => res.status(500).json(err));
+Thought.find()
+.then((thoughts) => res.json(thoughts))          
+.catch((err) => res.status(500).json(err));
 },
 
 
 // These functions look up a single thought and create new thoughts
 
 getThoughtById(req, res) {
-    Thought.findOne({ _id: req.params.thoughtId })
-    .populate({
-        path: 'reactions',
-        select: '-__v'
-    })
+Thought.findOne({ _id: req.params.thoughtId })
+.populate({
+path: 'reactions',
+select: '-__v'
+})
     
-    .select('-__v')
-    .then((thought) =>
-    !thought
-    ? res.status(404).json({ message: 'No thought with that ID' })
-    : res.json(thought)
+.select('-__v')
+.then((thought) =>
+!thought
+? res.status(404).json({ message: 'No thought with that ID' })
+: res.json(thought)
 )
 .catch((err) => res.status(500).json(err));
 },
 
 
 createThought({ params, body}, res) {
-    Thought.create(body)
-        .then(({ _id }) => {
-            return User.findOneAndUpdate(
-            { _id: params.userId },
-            { $push: { thoughts: _id }},
-        { new: true, runValidators: true }
-        );
+Thought.create(body)
+.then(({ _id }) => {
+    return User.findOneAndUpdate(
+    { _id: params.userId },
+    { $push: { thoughts: _id }},
+    { new: true, runValidators: true }
+    );
     })
     .then((thought) =>
     !thought
@@ -61,8 +57,8 @@ updateThought(req, res) {
     })
     .then((thought) =>
     !thought
-        ? res.status(404).json({ message: 'No thought with that id' })
-        : res.json(thought)
+    ? res.status(404).json({ message: 'No thought with that id' })
+    : res.json(thought)
 )
 .catch((err) => res.status(500).json(err));
 },
@@ -70,7 +66,7 @@ updateThought(req, res) {
 
 
 deleteThought(req, res) {
-    Thought.findOneAndDelete({ _id: req.params.thoughtId })
+Thought.findOneAndDelete({ _id: req.params.thoughtId })
 
     .then((thought) => {
     if (!thought) {
@@ -95,7 +91,7 @@ return res.json({ message: 'Thought successfully deleted!' });
 })
 .catch((err) => {
 console.log(err);
-    res.status(500).json(err);
+res.status(500).json(err);
 });
 },
 
@@ -106,7 +102,7 @@ Thought.findOneAndUpdate(
 { _id: req.params.thoughtId },
 { $push: { reactions: req.body } },
 { runValidators: true, new: true }
-    )
+)
 
     .populate({
     path: 'reactions',
